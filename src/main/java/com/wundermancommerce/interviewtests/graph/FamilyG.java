@@ -3,6 +3,7 @@ package com.wundermancommerce.interviewtests.graph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,22 +20,41 @@ import java.util.List;
  *
  * @author WINDOWS 8
  */
-@EnableAutoConfiguration
-@SpringBootApplication
+//@SpringBootApplication
 public class FamilyG {
 
     private static final String COMMA_DELIMITER = ",";
-    private final PeopleRepository peopleRepository;
-    private final RelationshipRepository relationshipRepository;
 
-    @Autowired
-    public FamilyG(PeopleRepository peopleRepository, RelationshipRepository relationshipRepository) {
-        this.peopleRepository = peopleRepository;
-        this.relationshipRepository = relationshipRepository;
-    }
 
+//    @Autowired
+    private  PeopleRepository peopleRepository;
+//    @Autowired
+    private  RelationshipRepository relationshipRepository;
+
+
+//    public FamilyG(PeopleRepository peopleRepository, RelationshipRepository relationshipRepository) {
+//        this.peopleRepository = peopleRepository;
+//        this.relationshipRepository = relationshipRepository;
+//    }
+
+//    public FamilyG() {
+//    }
 
     public static void main(String... args) {
+//        List<People> people = readPeople("src/test/resources/people.csv");
+//        List<Relationship> relationships = readRelationships("src/test/resources/relationships.csv");
+//
+//        for (People b : people) {
+//            System.out.println(b);
+//        }
+//
+//        for (Relationship r : relationships) {
+//            System.out.println(r);
+//        }
+        dastart();
+    }
+
+    public static void dastart() {
         List<People> people = readPeople("src/test/resources/people.csv");
         List<Relationship> relationships = readRelationships("src/test/resources/relationships.csv");
 
@@ -45,9 +65,7 @@ public class FamilyG {
         for (Relationship r : relationships) {
             System.out.println(r);
         }
-
     }
-
 
     public  People savePeople(People people) {
         peopleRepository.save(people);
