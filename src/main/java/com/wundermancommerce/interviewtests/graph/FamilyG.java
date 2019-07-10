@@ -27,9 +27,9 @@ public class FamilyG {
 
 
 //    @Autowired
-    private  PeopleRepository peopleRepository;
+//    private  PeopleRepository peopleRepository;
 //    @Autowired
-    private  RelationshipRepository relationshipRepository;
+//    private  RelationshipRepository relationshipRepository;
 
 
 //    public FamilyG(PeopleRepository peopleRepository, RelationshipRepository relationshipRepository) {
