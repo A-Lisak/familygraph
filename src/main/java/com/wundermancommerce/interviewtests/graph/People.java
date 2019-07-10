@@ -11,14 +11,14 @@ public class People {
     private String email;
     private int age;
 
-    public People() {
-    }
-
-    public People(String name, String email, int age) {
-        this.name = name;
-        this.email = email;
-        this.age = age;
-    }
+//    public People() {
+//    }
+//
+//    public People(String name, String email, int age) {
+//        this.name = name;
+//        this.email = email;
+//        this.age = age;
+//    }
 
     public String getName() {
         return name;

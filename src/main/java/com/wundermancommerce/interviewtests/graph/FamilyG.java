@@ -1,10 +1,10 @@
 package com.wundermancommerce.interviewtests.graph;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -21,17 +21,61 @@ import java.util.List;
  * @author WINDOWS 8
  */
 //@SpringBootApplication
+
+
+//@EntityScan("com.wundermancommerce.interviewtests.graph")
+//@EnableJpaRepositories("com.wundermancommerce.interviewtests.graph")
+//@SpringBootApplication(scanBasePackages = "ccom.wundermancommerce.interviewtests.graph")
+
+//@EntityScan
+//@EnableJpaRepositories
+@SpringBootApplication
 public class FamilyG {
 
     private static final String COMMA_DELIMITER = ",";
 
 
+    @Autowired
+    private PeopleRepository peopleRepository;
 //    @Autowired
-//    private  PeopleRepository peopleRepository;
-//    @Autowired
-//    private  RelationshipRepository relationshipRepository;
+//    private RelationshipRepository relationshipRepository;
+
+//    private List<People> people;
+//    private List<Relationship> relationships;
+
+    @PostConstruct
+    public void init() {
+//        List<People> p = new ArrayList<>();
+        List<People> people = readPeople("src/test/resources/people.csv");
+//
+//        p = people;
+//        List<Relationship>   relationships = readRelationships("src/test/resources/relationships.csv");
+
+//        List<People> list = new ArrayList<>();
+//        People people = new People();
+//
+//        people.setName("TeamA");
+//        people.setEmail("Callao");
+//        list.add(people);
+        for (People b : people) {
+            System.out.println(b);
+        }
+        peopleRepository.save(people);
 
 
+//
+//        for (Relationship r : relationships) {
+//            System.out.println(r);
+//        }
+
+    }
+
+    public List<People> getAllPeople() {
+
+        return peopleRepository.findAll();
+    }
+
+//    @Autowired
 //    public FamilyG(PeopleRepository peopleRepository, RelationshipRepository relationshipRepository) {
 //        this.peopleRepository = peopleRepository;
 //        this.relationshipRepository = relationshipRepository;
@@ -41,6 +85,7 @@ public class FamilyG {
 //    }
 
     public static void main(String... args) {
+        SpringApplication.run(FamilyG.class, args);
 //        List<People> people = readPeople("src/test/resources/people.csv");
 //        List<Relationship> relationships = readRelationships("src/test/resources/relationships.csv");
 //
@@ -51,47 +96,47 @@ public class FamilyG {
 //        for (Relationship r : relationships) {
 //            System.out.println(r);
 //        }
-        dastart();
+//        dastart();
     }
 
-    public static void dastart() {
-        List<People> people = readPeople("src/test/resources/people.csv");
-        List<Relationship> relationships = readRelationships("src/test/resources/relationships.csv");
+//    public static void dastart() {
+//        List<People> people = readPeople("src/test/resources/people.csv");
+//        List<Relationship> relationships = readRelationships("src/test/resources/relationships.csv");
+//
+//        for (People b : people) {
+//            System.out.println(b);
+//        }
+//
+//        for (Relationship r : relationships) {
+//            System.out.println(r);
+//        }
+//    }
 
-        for (People b : people) {
-            System.out.println(b);
-        }
+//    public  People savePeople(People people) {
+//        peopleRepository.save(people);
+//        return people;
+//    }
 
-        for (Relationship r : relationships) {
-            System.out.println(r);
-        }
-    }
+//    public Relationship saveRelationship(Relationship relationship) {
+//        relationshipRepository.save(relationship);
+//        return relationship;
+//    }
+//
+//    public List<People> getPeople() {
+//        Iterable<People> people = peopleRepository.findAll();
+//        List<People> target = new ArrayList<>();
+//        people.forEach(target::add);
+//        return target;
+//    }
+//
+//    public List<Relationship> getRelationship() {
+//        Iterable<Relationship> relationship = relationshipRepository.findAll();
+//        List<Relationship> target = new ArrayList<>();
+//        relationship.forEach(target::add);
+//        return target;
+//    }
 
-    public  People savePeople(People people) {
-        peopleRepository.save(people);
-        return people;
-    }
-
-    public Relationship saveRelationship(Relationship relationship) {
-        relationshipRepository.save(relationship);
-        return relationship;
-    }
-
-    public List<People> getPeople() {
-        Iterable<People> people = peopleRepository.findAll();
-        List<People> target = new ArrayList<>();
-        people.forEach(target::add);
-        return target;
-    }
-
-    public List<Relationship> getRelationship() {
-        Iterable<Relationship> relationship = relationshipRepository.findAll();
-        List<Relationship> target = new ArrayList<>();
-        relationship.forEach(target::add);
-        return target;
-    }
-
-    private static List<People> readPeople(String fileName) {
+    private List<People> readPeople(String fileName) {
         List<People> peopleList = new ArrayList<>();
         Path pathToFile = Paths.get(fileName);
 
@@ -137,19 +182,25 @@ public class FamilyG {
         return relationshipsList;
     }
 
-    private static People createPeople(String[] metadata) {
+    private People createPeople(String[] metadata) {
 //        long id = Integer.parseInt(metadata[0]);
-        String name = metadata[0];
-        String email = metadata[1];
-        int age = Integer.parseInt(metadata[2]);
-        return new People(name, email, age);
+//        String name = metadata[1];
+//        String email = metadata[2];
+//        int age = Integer.parseInt(metadata[3]);
+
+        People people = new People();
+        people.setId(Integer.parseInt(metadata[0]));
+        people.setName(metadata[1]);
+        people.setEmail(metadata[2]);
+        people.setAge(Integer.parseInt(metadata[3]));
+        return people;
     }
 
     private static Relationship createRelationships(String[] metadata) {
-//        long id = Integer.parseInt(metadata[0]);
-        String person1 = metadata[0];
-        String relationship = metadata[1];
-        String person2 = metadata[2];
+        long id = Integer.parseInt(metadata[0]);
+        String person1 = metadata[1];
+        String relationship = metadata[2];
+        String person2 = metadata[3];
         return new Relationship(person1, relationship, person2);
     }
 }
