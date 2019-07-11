@@ -1,6 +1,5 @@
 package com.wundermancommerce.interviewtests.graph;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +23,13 @@ public class FamilyGTest {
     @Autowired
     private RelationshipRepository relationshipRepository;
 
-
     @Test
     public void contextLoads() {
-//        familyG.deleteAll();
         familyG.init();
         List<People> allPeople = familyG.getAllPeople();
         List<Relationship> relationships = familyG.getAllRelationships();
 
         assertThat(allPeople.size()).isEqualTo(12);
-//        assertThat(allPeople.stream().filter(p -> p.getName().equals("bob")).)
-//        assertThat(acceptResponse.getAcceptResult()).isNotNull();
-//        Assertions.assertThat(acceptResponse.getAcceptResult().getAcceptInitiateMtaResponseItem()).isNotNull();
-//        Assertions.assertThat(acceptResponse.getAcceptResult().getAcceptInitiateMtaResponseItem().isSuccess()).isEqualTo(true);
     }
 
     @Test
@@ -54,17 +47,23 @@ public class FamilyGTest {
     }
 
     @Test
+    public void find_family_members_bob() {
+        familyG.init();
+        People bob = new People();
+        bob.setName("Bob");
+        bob.setEmail("bob@bob.com");
+        Long bobn = familyG.findFamilyMembers(bob);
+        assertThat(bobn).isEqualTo(4);
+    }
+
+    @Test
     public void findFamilyMembers() {
         familyG.init();
-        Long bob = familyG.findFamilyMembers("Bob");
-        Long jenny = familyG.findRelationships("Jenny");
-        Long nigel = familyG.findRelationships("Nigel");
-        Long alan = familyG.findRelationships("Alan");
-
-        assertThat(bob).isEqualTo(4);
-        assertThat(jenny).isEqualTo(3);
-        assertThat(nigel).isEqualTo(2);
-        assertThat(alan).isEqualTo(0);
+        People jenny = new People();
+        jenny.setName("Jenny");
+        jenny.setEmail("jenny@toys.com");
+        Long jennyn = familyG.findFamilyMembers(jenny);
+        assertThat(jennyn).isEqualTo(4);
     }
 }
 
