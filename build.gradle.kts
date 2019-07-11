@@ -1,33 +1,29 @@
-buildscript {
-	ext {
-		springBootVersion = '1.5.10.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+plugins {
+	kotlin("jvm") version "1.3.21"
+	java
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-
-group = 'com.mleyva'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+	jcenter()
 }
 
-
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	runtime('org.springframework.boot:spring-boot-devtools')
-	runtime('org.hsqldb:hsqldb')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile( kotlin("stdlib") )
+	compile("com.google.guava:guava:18.0")
+	compile( "org.apache.commons:commons-lang3:3.3.2")
+	compile( "com.h2database:h2")
+	compile( "org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final")
+	compile( "org.springframework.boot:spring-boot-starter-data-jpa")
+	compile( "mysql:mysql-connector-java")
+	compile( "org.springframework.data:spring-data-commons:2.1.9.RELEASE")
+	compile( "org.springframework.boot:spring-boot-starter-test")
+	compile ("com.h2database:h2:1.4.199")
+	compile ("com.github.spt-oss:spring-boot-starter-test-plus:0.5.0")
+	testCompile("junit:junit:4.+")
+}
+
+tasks.test {
+	testLogging {
+		events("PASSED", "FAILED", "SKIPPED", "STANDARD_ERROR", "STANDARD_OUT")
+	}
 }

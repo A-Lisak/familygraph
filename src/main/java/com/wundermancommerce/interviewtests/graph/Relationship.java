@@ -6,20 +6,11 @@ import javax.persistence.*;
 @Table(name = "relationship")
 public class Relationship {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private long id;
     private String person1;
     private String relationship;
     private String person2;
-
-    public Relationship() {
-    }
-
-    public Relationship(String person1, String relationship, String person2) {
-        this.person1 = person1;
-        this.relationship = relationship;
-        this.person2 = person2;
-    }
 
     public String getPerson1() {
         return person1;

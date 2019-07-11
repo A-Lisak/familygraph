@@ -1,5 +1,7 @@
 package com.wundermancommerce.interviewtests.graph;
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "people")
@@ -11,14 +13,13 @@ public class People {
     private String email;
     private int age;
 
-//    public People() {
-//    }
-//
-//    public People(String name, String email, int age) {
-//        this.name = name;
-//        this.email = email;
-//        this.age = age;
-//    }
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -42,14 +43,6 @@ public class People {
 
     public void setAge(int age) {
         this.age = age;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @Override
