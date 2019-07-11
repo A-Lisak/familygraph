@@ -23,17 +23,18 @@ public class FamilyGTest {
     @Autowired
     private RelationshipRepository relationshipRepository;
 
+    //run tests one at a time, otherwise database gets overpopulated.
+
     @Test
-    public void contextLoads() {
+    public void load_people() {
         familyG.init();
         List<People> allPeople = familyG.getAllPeople();
         List<Relationship> relationships = familyG.getAllRelationships();
-
         assertThat(allPeople.size()).isEqualTo(12);
     }
 
     @Test
-    public void findRelationships() {
+    public void find_relationships() {
         familyG.init();
         Long bob = familyG.findRelationships("Bob");
         Long jenny = familyG.findRelationships("Jenny");
@@ -57,7 +58,7 @@ public class FamilyGTest {
     }
 
     @Test
-    public void findFamilyMembers() {
+    public void find_family_members_jenny() {
         familyG.init();
         People jenny = new People();
         jenny.setName("Jenny");
@@ -66,5 +67,3 @@ public class FamilyGTest {
         assertThat(jennyn).isEqualTo(4);
     }
 }
-
-

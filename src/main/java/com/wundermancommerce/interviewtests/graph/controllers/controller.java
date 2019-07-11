@@ -21,6 +21,11 @@ public class controller {
     @Autowired
     private RelationshipRepository relationshipRepository;
 
+
+//to check database, was going to use http://localhost:8080/h2-console but cannot get it working, so
+//using postman.
+
+
     //http://localhost:8080/people
     @PostMapping("/people")
     public People createPeople(@RequestBody People people) {

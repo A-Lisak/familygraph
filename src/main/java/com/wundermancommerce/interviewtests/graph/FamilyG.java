@@ -46,6 +46,11 @@ public class FamilyG {
         relationshipRepository.save(relationships);
     }
 
+    public void deleteAll() {
+        peopleRepository.deleteAll();
+        relationshipRepository.deleteAll();
+    }
+
     public List<People> getAllPeople() {
         return peopleRepository.findAll();
     }
@@ -69,7 +74,7 @@ public class FamilyG {
         List<Relationship> relationshipList = getAllRelationships();
         List<Relationship> person = relationshipList.stream().filter(r -> r.getRelationship().equals("FAMILY"))
                 .filter(r -> r.getPerson1().equals(people.getEmail())).collect(Collectors.toList());
-        return valueOf(person.size() );
+        return valueOf(person.size());
     }
 
     private List<People> readPeople(String fileName) {
