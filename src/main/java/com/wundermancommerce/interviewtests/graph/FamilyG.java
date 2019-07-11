@@ -1,7 +1,7 @@
 package com.wundermancommerce.interviewtests.graph;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.BufferedReader;
@@ -12,6 +12,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.lang.Long.valueOf;
 
 /**
  * Simple Java program to read CSV file in Java. In this program we will read
@@ -19,61 +23,56 @@ import java.util.List;
  *
  * @author WINDOWS 8
  */
-@EnableAutoConfiguration
+
 @SpringBootApplication
 public class FamilyG {
 
     private static final String COMMA_DELIMITER = ",";
-    private final PeopleRepository peopleRepository;
-    private final RelationshipRepository relationshipRepository;
 
     @Autowired
-    public FamilyG(PeopleRepository peopleRepository, RelationshipRepository relationshipRepository) {
-        this.peopleRepository = peopleRepository;
-        this.relationshipRepository = relationshipRepository;
-    }
+    private PeopleRepository peopleRepository;
 
+    @Autowired
+    private RelationshipRepository relationshipRepository;
 
     public static void main(String... args) {
+        SpringApplication.run(FamilyG.class, args);
+    }
+
+    public void init() {
         List<People> people = readPeople("src/test/resources/people.csv");
         List<Relationship> relationships = readRelationships("src/test/resources/relationships.csv");
-
-        for (People b : people) {
-            System.out.println(b);
-        }
-
-        for (Relationship r : relationships) {
-            System.out.println(r);
-        }
-
-    }
-
-
-    public  People savePeople(People people) {
         peopleRepository.save(people);
-        return people;
+        relationshipRepository.save(relationships);
     }
 
-    public Relationship saveRelationship(Relationship relationship) {
-        relationshipRepository.save(relationship);
-        return relationship;
+    public List<People> getAllPeople() {
+        return peopleRepository.findAll();
     }
 
-    public List<People> getPeople() {
-        Iterable<People> people = peopleRepository.findAll();
-        List<People> target = new ArrayList<>();
-        people.forEach(target::add);
-        return target;
+    public List<Relationship> getAllRelationships() {
+        return relationshipRepository.findAll();
     }
 
-    public List<Relationship> getRelationship() {
-        Iterable<Relationship> relationship = relationshipRepository.findAll();
-        List<Relationship> target = new ArrayList<>();
-        relationship.forEach(target::add);
-        return target;
+    public Long findRelationships(String name) {
+        List<People> peopleList = getAllPeople();
+        List<Relationship> relationships = getAllRelationships();
+
+        Optional<People> people = peopleList.stream().filter(p -> p.getName().equals(name)).findAny();
+        Long relationship = relationships.stream().filter(r -> r.getPerson1().equals(people.get().getEmail())).count();
+        Long relationship1 = relationships.stream().filter(r -> r.getPerson2().equals(people.get().getEmail())).count();
+
+        return relationship + relationship1;
     }
 
-    private static List<People> readPeople(String fileName) {
+    public Long findFamilyMembers(People people) {
+        List<Relationship> relationshipList = getAllRelationships();
+        List<Relationship> person = relationshipList.stream().filter(r -> r.getRelationship().equals("FAMILY"))
+                .filter(r -> r.getPerson1().equals(people.getEmail())).collect(Collectors.toList());
+        return valueOf(person.size() );
+    }
+
+    private List<People> readPeople(String fileName) {
         List<People> peopleList = new ArrayList<>();
         Path pathToFile = Paths.get(fileName);
 
@@ -85,7 +84,6 @@ public class FamilyG {
                 People people = createPeople(attributes);
                 peopleList.add(people);
                 line = br.readLine();
-
             }
 
         } catch (IOException ioe) {
@@ -95,20 +93,19 @@ public class FamilyG {
         return peopleList;
     }
 
-    private static List<Relationship> readRelationships(String fileName) {
+    private List<Relationship> readRelationships(String fileName) {
         List<Relationship> relationshipsList = new ArrayList<>();
         Path pathToFile = Paths.get(fileName);
 
         try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.US_ASCII)) {
             String line = br.readLine();
-//            String line =   br.lines().filter(l -> l.matches("(\\d+)(,\\s*\\d+)*"));
             while (line != null) {
                 if (line.length() > 0) {
                     String[] attributes = line.split(COMMA_DELIMITER);
                     Relationship relationships = createRelationships(attributes);
                     relationshipsList.add(relationships);
-                }
 
+                }
                 line = br.readLine();
             }
 
@@ -119,19 +116,19 @@ public class FamilyG {
         return relationshipsList;
     }
 
-    private static People createPeople(String[] metadata) {
-//        long id = Integer.parseInt(metadata[0]);
-        String name = metadata[0];
-        String email = metadata[1];
-        int age = Integer.parseInt(metadata[2]);
-        return new People(name, email, age);
+    private People createPeople(String[] metadata) {
+        People people = new People();
+        people.setName(metadata[0]);
+        people.setEmail(metadata[1]);
+        people.setAge(Integer.parseInt(metadata[2]));
+        return people;
     }
 
-    private static Relationship createRelationships(String[] metadata) {
-//        long id = Integer.parseInt(metadata[0]);
-        String person1 = metadata[0];
-        String relationship = metadata[1];
-        String person2 = metadata[2];
-        return new Relationship(person1, relationship, person2);
+    private Relationship createRelationships(String[] metadata) {
+        Relationship relationship = new Relationship();
+        relationship.setPerson1(metadata[0]);
+        relationship.setRelationship(metadata[1]);
+        relationship.setPerson2(metadata[2]);
+        return relationship;
     }
 }
